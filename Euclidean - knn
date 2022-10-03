@@ -1,0 +1,90 @@
+# Евклидово расстояние
+import math
+import random
+from random import randint
+from matplotlib import pyplot as plt
+from matplotlib import style
+
+# списки с данными, то есть параметры растений. И их классификации (заполним случайным образом)
+lenght_x =[]
+widht_y = []
+species = []
+results_xy = []
+j = 0
+i = 0
+
+# циклы которые задают элементы в спсики случайным образом
+for j in range(30):
+    random_numbr = random.uniform(2.3, 19.3)
+    if j not in lenght_x:
+        j+=1
+        lenght_x.append(random_numbr)
+    
+for j in range(30):
+    random_number = random.uniform(1.5, 20.7)
+    if j not in widht_y:
+        j+=1
+        widht_y.append(random_number)
+    
+foo = ('setosa', 'virginica', 'verscicolor')
+for i in range(30):
+    spi = random.choice(foo)
+    i+=1
+    species.append(spi)
+
+# параметры растений, нужно найти их класс
+target_x = random.uniform(1.5, 15.3)
+target_y = random.uniform(1.5, 14.5)
+
+# цикл который выводит специальный коэффицент который будем наносить на координатную прямую, данные вписываются в список 
+for i in range(len(lenght_x)):
+        results = ((pow((lenght_x[i] - target_x),2) + pow((widht_y[i] - target_y),2))**0.5)
+        i+=1
+        results_xy.append(results)
+
+# конкатенация результата (xy) и присваивание им классов, результат в списке 
+temp = min(results_xy)
+res = []
+for t in range(len(results_xy)):
+    res.append(str(results_xy[t]) + "-" + str(species[t]))
+    t+=1
+    
+# создание кортежей с результатом и их классом и сортировка и объединение их в один список
+res_p = list(zip(results_xy, species))
+res_p.sort()
+
+# поиск индекса минимального элемента из списка (result_xy) результат записывается в список[]
+temp = min(results_xy)
+rec = []
+for idx in range(0, len(results_xy)):
+    if temp == results_xy[idx]:
+        rec.append(idx)
+
+# процесс преобразования списка в число      
+rec = (str(rec)[1:-1].replace(", ", ""))
+rec = (int(rec))
+
+# переменные для точки ближайшего соседа
+knn_x = lenght_x[rec]
+knn_y = widht_y[rec]
+knn_cl = species[rec]
+
+# вывод результата через цикл 
+i = 0
+f = 1
+while i<len(res_p):
+        print("Ответ:#",f,res_p[i])
+        i+=1
+        f+=1
+print("Ответ:", knn_cl)
+
+# создание графика
+plt.plot([lenght_x], [widht_y], 'ro')
+plt.plot([target_x], [target_y], 'ro', color = 'g')
+plt.plot([knn_x], [knn_y], 'ro', color = 'c')
+plt.axis([0, 20, 0, 22])  
+plt.xlabel('lenght_x')
+plt.ylabel('idht_y')
+plt.annotate("(сосед)", (knn_x, knn_y,))
+plt.annotate("(цель)", (target_x, target_y))
+plt.show()
